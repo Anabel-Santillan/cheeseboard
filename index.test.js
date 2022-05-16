@@ -88,4 +88,22 @@ describe('Checking model relationships', () => {
             expect(board1[0]).toBeInstanceOf(Cheese);
         }
     })
+
+    test('Eager loading- a board can be loaded with its cheeses', () => {
+        async () => {
+            const board1 = await Board.create({name: 'Maple board', description: 'Maple Board with varnish', rating: 5});
+            const provelone = await Cheese.create({title: "Provelone", description: "Low in calorie and delicious."});
+            const sharpCheddar = await Cheese.create({title: "Sharp Cheddar", description: "Very popular cheese"});
+            const brie = await Cheese.create({title: "Brie", description: "Strong taste, usually paired with jam"});
+
+            await board1.addCheese("provelone");
+            await board1.addCheese("Sharp Cheddar");
+            await board1.addCheese("Brie");
+
+            const allBoard1Cheeses = await board1.getCheese();
+
+            expect(allBoard1Cheeses.length).toBe(3);
+            expect(allBoard1Cheeses[0]).toBeInstanceOf(Cheese);
+        }
+    })
 })
